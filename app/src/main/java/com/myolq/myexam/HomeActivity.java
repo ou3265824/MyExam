@@ -20,6 +20,7 @@ import com.myolq.frame.Utils.L;
 import com.myolq.frame.callback.StringCallBack;
 import com.myolq.frame.loader.OkgoLoader;
 import com.myolq.myexam.base.InitActivity;
+import com.myolq.myexam.greendao.dao.SingleDao;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,6 +48,7 @@ public class HomeActivity extends InitActivity
             @Override
             public void onSuccess(String s, Call call, Response response) {
                 L.log(s);
+//                SingleDao.getInstance().insertSingle();
             }
 
             @Override
