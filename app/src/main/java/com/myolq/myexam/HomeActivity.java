@@ -16,10 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 
+import com.google.gson.reflect.TypeToken;
 import com.myolq.frame.Utils.L;
+import com.myolq.frame.callback.GsonCallBack;
 import com.myolq.frame.callback.StringCallBack;
 import com.myolq.frame.loader.OkgoLoader;
 import com.myolq.myexam.base.InitActivity;
+import com.myolq.myexam.bean.BaseBean;
 import com.myolq.myexam.greendao.dao.SingleDao;
 
 import butterknife.BindView;
@@ -44,11 +47,12 @@ public class HomeActivity extends InitActivity
     public void onCreate() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        OkgoLoader.getInstance().sendByGet(BaseUrl.SUBJECT, new StringCallBack() {
+        OkgoLoader.getInstance().sendByGet(BaseUrl.SUBJECT, new GsonCallBack<BaseBean>(new TypeToken<BaseBean>(){}.getType()) {
             @Override
-            public void onSuccess(String s, Call call, Response response) {
-                L.log(s);
-//                SingleDao.getInstance().insertSingle();
+            public void onSuccess(BaseBean baseBean, Call call, Response response) {
+                L.log(baseBean.getResults().get(0).getTitleName());
+                L.log(baseBean.getResults().get(0).getTitleName());
+                L.log(baseBean.getResults().get(0).getTitleName());
             }
 
             @Override

@@ -10,7 +10,7 @@ import com.myolq.myexam.ormlite.bean.SingleBean;
 import java.sql.SQLException;
 
 /**
- * 期货股票登录
+ *
  */
 
 public class SingleDao {
