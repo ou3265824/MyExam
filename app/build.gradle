@@ -13,6 +13,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -20,18 +24,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-//    greendao {
-//        //数据库schema版本，也可以理解为数据库版本号
-//        schemaVersion 1
-//        //设置DaoMaster 、DaoSession、Dao包名
-//        daoPackage 'com.myolq.myexam.greendao.db'
-//        //设置DaoMaster 、DaoSession、Dao目录
-//        targetGenDir 'src/main/java'
-//        //设置生成单元测试目录
-////    targetGenDirTest
-//        //设置自动生成单元测试用例
-////    generateTests
-//    }
+
+
+
+    greendao {
+        //数据库schema版本，也可以理解为数据库版本号
+        schemaVersion 1
+        //设置DaoMaster 、DaoSession、Dao包名
+        daoPackage 'com.myolq.myexam.greendao.db'
+        //设置DaoMaster 、DaoSession、Dao目录
+        targetGenDir 'src/main/java'
+        //设置生成单元测试目录
+//    targetGenDirTest
+        //设置自动生成单元测试用例
+//    generateTests
+    }
 }
 
 dependencies {
@@ -50,4 +57,7 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.0'
     compile files('libs/ormlite-android-5.0.jar')
     compile files('libs/ormlite-core-5.0.jar')
+
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'//其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
+    compile 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
 }

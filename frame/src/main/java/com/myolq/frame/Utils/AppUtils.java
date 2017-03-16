@@ -19,6 +19,8 @@ import java.util.Map;
 
 public class AppUtils {
 
+    public static Context appContext;
+
     private AppUtils()
     {
 		/* cannot be instantiated */

@@ -1,29 +1,24 @@
 package com.myolq.myexam;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 
 import com.google.gson.reflect.TypeToken;
-import com.myolq.frame.Utils.L;
 import com.myolq.frame.callback.GsonCallBack;
-import com.myolq.frame.callback.StringCallBack;
 import com.myolq.frame.loader.OkgoLoader;
 import com.myolq.myexam.base.InitActivity;
 import com.myolq.myexam.bean.BaseBean;
-import com.myolq.myexam.greendao.dao.SingleDao;
+import com.myolq.myexam.exam.ExamActivity;
+import com.myolq.myexam.ormlite.dao.SingleDao;
+import com.myolq.myexam.ormlite.bean.SingleBean;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,12 +42,15 @@ public class HomeActivity extends InitActivity
     public void onCreate() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        OkgoLoader.getInstance().sendByGet(BaseUrl.SUBJECT, new GsonCallBack<BaseBean>(new TypeToken<BaseBean>(){}.getType()) {
+        OkgoLoader.getInstance().sendByGet(BaseUrl.SINGLE, new GsonCallBack<BaseBean<SingleBean>>(new TypeToken<BaseBean<SingleBean>>(){}.getType()) {
             @Override
-            public void onSuccess(BaseBean baseBean, Call call, Response response) {
-                L.log(baseBean.getResults().get(0).getTitleName());
-                L.log(baseBean.getResults().get(0).getTitleName());
-                L.log(baseBean.getResults().get(0).getTitleName());
+            public void onSuccess(BaseBean<SingleBean> baseBean, Call call, Response response) {
+//                L.log(baseBean.getResults().get(0).getTitleName());
+//                L.log(baseBean.getResults().get(0).getTitleName());
+//                L.log(baseBean.getResults().get(0).getTitleName());
+                List<SingleBean> list=baseBean.getResults();
+                SingleDao singledao=new SingleDao(getApplicationContext());
+                singledao.add(list);
             }
 
             @Override
@@ -74,23 +72,23 @@ public class HomeActivity extends InitActivity
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        OkgoLoader.getInstance().sendByGet(BaseUrl.SUBJECT, new StringCallBack() {
-            @Override
-            public void onSuccess(String s, Call call, Response response) {
-                L.log(s);
-            }
-
-            @Override
-            public void onError(Call call, Response response, Exception e) {
-
-            }
-        });
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_home);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        OkgoLoader.getInstance().sendByGet(BaseUrl.SUBJECT, new StringCallBack() {
+//            @Override
+//            public void onSuccess(String s, Call call, Response response) {
+//                L.log(s);
+//            }
+//
+//            @Override
+//            public void onError(Call call, Response response, Exception e) {
+//
+//            }
+//        });
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -100,15 +98,15 @@ public class HomeActivity extends InitActivity
 //            }
 //        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
 
 //        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 //        navigationView.setNavigationItemSelectedListener(this);
-    }
+//    }
 
     @Override
     public void onBackPressed() {
