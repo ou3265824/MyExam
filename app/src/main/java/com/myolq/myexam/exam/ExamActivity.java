@@ -52,6 +52,7 @@ public class ExamActivity extends InitActivity {
     private Handler handler;
     private List<SingleBean> singleList;
     private SingleFragment singleFragment;
+    private int current=0;
 
     @Override
     public int getLayout() {
@@ -74,6 +75,23 @@ public class ExamActivity extends InitActivity {
         singleDao = new SingleDao(this);
 
         setHandler();
+        current = vpPager.getCurrentItem();
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                current=position;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -108,9 +126,9 @@ public class ExamActivity extends InitActivity {
 
 
 
-    public void getSingle(){
+    public SingleBean getSingle(){
 
-//        SingleBean single=singleList.get()
+       return singleList!=null?singleList.get(current):null;
     }
 
     public View getViewSingle(SingleBean single) {

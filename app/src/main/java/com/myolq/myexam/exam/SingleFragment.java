@@ -38,12 +38,15 @@ public class SingleFragment extends InitFragment {
 
     @Override
     public void onCreateView() {
-//        SingleDao singleDao=new SingleDao(AppUtils.appContext);
-//        List<SingleBean> singleList=singleDao.selectSingleList();
-
-
-
-
-
+        ExamActivity activity= (ExamActivity) getActivity();
+        SingleBean single=activity.getSingle();
+        if (single!=null){
+            tvTitleName.setText(single.getTitleName());
+            rbA.setText(single.getOptionA());
+            rbB.setText(single.getOptionB());
+            rbC.setText(single.getOptionC());
+            rbD.setText(single.getOptionD());
+            tvResult.setText(single.getResult());
+        }
     }
 }
