@@ -7,10 +7,10 @@ import com.myolq.myexam.base.InitFragment;
  * Created by Administrator on 2017/3/14.
  */
 
-public class ExamMuchFragment extends InitFragment{
+public class ManyFragment extends InitFragment{
     @Override
     public int getLayout() {
-        return R.layout.fragment_exma_much;
+        return R.layout.fragment_many;
     }
 
     @Override

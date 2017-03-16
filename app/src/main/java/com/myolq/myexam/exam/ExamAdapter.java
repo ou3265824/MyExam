@@ -1,4 +1,4 @@
-package com.myolq.myexam;
+package com.myolq.myexam.exam;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +26,6 @@ public class ExamAdapter extends FragmentPagerAdapter{
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return fragments==null?0:fragments.size();
     }
 }

@@ -9,6 +9,8 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "single")
 public class SingleBean {
 
+
+
     //主键：交易所编号+合约编号
     @DatabaseField(columnName = "singleId",id = true)
     private Long singleId;
@@ -28,8 +30,57 @@ public class SingleBean {
     private String result;
     @DatabaseField(columnName = "type")
     private String type;
-    @DatabaseField(columnName = "updateData")
-    private String updateData;
+
+    @DatabaseField(columnName = "fraction")
+    private String fraction;
+    @DatabaseField(columnName = "objectId")
+    private String objectId;
+
+    @DatabaseField(columnName = "updatedAt")
+    private String updatedAt;
+
+
+    public SingleBean() {
+    }
+
+    public SingleBean(Long titleId, String titleName, String optionA, String optionB, String optionC, String optionD, String result, String type, String fraction, String objectId, String updatedAt) {
+        this.titleId = titleId;
+        this.titleName = titleName;
+        this.optionA = optionA;
+        this.optionB = optionB;
+        this.optionC = optionC;
+        this.optionD = optionD;
+        this.result = result;
+        this.type = type;
+        this.fraction = fraction;
+        this.objectId = objectId;
+        this.updatedAt = updatedAt;
+    }
+
+    public String getFraction() {
+
+        return fraction;
+    }
+
+    public void setFraction(String fraction) {
+        this.fraction = fraction;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     public Long getSingleId() {
         return singleId;
@@ -103,11 +154,4 @@ public class SingleBean {
         this.type = type;
     }
 
-    public String getUpdateData() {
-        return updateData;
-    }
-
-    public void setUpdateData(String updateData) {
-        this.updateData = updateData;
-    }
 }

@@ -9,11 +9,18 @@ import android.view.ViewGroup;
 
 import com.myolq.frame.base.BaseFragment;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+import static butterknife.ButterKnife.bind;
+
 /**
  * Created by Administrator on 2017/3/14.
  */
 
 public abstract class InitFragment extends BaseFragment{
+
+    private Unbinder unbinder;
 
     public abstract void onCreateView();
 
@@ -21,7 +28,14 @@ public abstract class InitFragment extends BaseFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=super.onCreateView(inflater, container, savedInstanceState);
+        unbinder = ButterKnife.bind(this,view);
         onCreateView();
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 }

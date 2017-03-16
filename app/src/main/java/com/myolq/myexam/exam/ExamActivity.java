@@ -1,4 +1,4 @@
-package com.myolq.myexam;
+package com.myolq.myexam.exam;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -6,9 +6,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.myolq.myexam.R;
 import com.myolq.myexam.base.InitActivity;
-import com.myolq.myexam.exam.ExamMuchFragment;
-import com.myolq.myexam.exam.ExamOneFragment;
+import com.myolq.myexam.ormlite.bean.SingleBean;
+import com.myolq.myexam.ormlite.dao.SingleDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +32,10 @@ public class ExamActivity extends InitActivity {
     TextView tvTime;
     @BindView(R.id.tv_down)
     TextView tvDown;
-    private ExamOneFragment examOneFragment;
-    private ExamMuchFragment examMuchFragment;
+    private SingleFragment examOneFragment;
+    private ManyFragment examMuchFragment;
     private ExamAdapter examAdapter;
+    private List<Fragment> fragments;
 
     @Override
     public int getLayout() {
@@ -44,12 +46,21 @@ public class ExamActivity extends InitActivity {
     @Override
     public void onCreate() {
         if (examOneFragment==null)
-            examOneFragment = new ExamOneFragment();
+            examOneFragment = new SingleFragment();
         if (examMuchFragment==null)
-            examMuchFragment = new ExamMuchFragment();
-        List<Fragment> fragments=new ArrayList<>();
-        examAdapter = new ExamAdapter(getSupportFragmentManager(),fragments);
+            examMuchFragment = new ManyFragment();
+        if (fragments==null)
+            fragments = new ArrayList<>();
+        if (examAdapter==null)
+            examAdapter = new ExamAdapter(getSupportFragmentManager(), fragments);
         vpPager.setAdapter(examAdapter);
+
+        SingleDao singleDao=new SingleDao(this);
+        List<SingleBean> singleList=singleDao.selectSingleList();
+        for (int i = 0; i < singleList.size(); i++) {
+            fragments.add(examOneFragment);
+        }
+
     }
 
     @OnClick({R.id.iv_back, R.id.tv_up, R.id.tv_down})
