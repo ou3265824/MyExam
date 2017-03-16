@@ -6,32 +6,58 @@
     <TextView
         android:id="@+id/tv_title_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
     <RadioGroup
+        android:id="@+id/rg_xuanze"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/rb_a"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/rb_b"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/rb_c"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/rb_d"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            />
     </RadioGroup>
     <TextView
         android:id="@+id/tv_result"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        />
 </LinearLayout>

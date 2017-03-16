@@ -125,8 +125,8 @@ public class SingleDao {
     public List<SingleBean> selectSingleList(){
 
         try {
-            List<SingleBean> bean =  builder.orderBy("updatedAt",false).query();
-
+            List<SingleBean> bean =  builder.orderBy("titleId",true).query();
+            L.log(bean.toString());
             if (bean!=null){
 
                 return bean;
@@ -138,23 +138,25 @@ public class SingleDao {
     }
 
     //修改数据库的最新一条数据
-//    public void updateUser(UserBean userBean){
-//
-//        try {
-//            userIntegerDao.createOrUpdate(userBean);
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public String selectMax(){
+        try {
+            SingleBean bean= (SingleBean) builder.orderBy("updatedAt",false).queryForFirst();
+            if (bean!=null){
+                return bean.getUpdatedAt();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
-//    public UserBean selectNewUser(String type,String sysdictValue){
+//    public SingleBean selectNewUser(String type,String sysdictValue){
 //
 //        try {
-//            UserBean userBean = (UserBean) builder.orderBy("updateDate",false).where().eq("type",type).and().eq("sysdictValue",sysdictValue).queryForFirst();
-//            if (userBean!=null){
-//                return userBean;
+//            SingleBean bean = (SingleBean) builder.orderBy("updatedAt",false).where().eq("type",type).and().eq("sysdictValue",sysdictValue).queryForFirst();
+//            if (bean!=null){
+//                return bean;
 //            }
 //        } catch (SQLException e) {
 //            e.printStackTrace();

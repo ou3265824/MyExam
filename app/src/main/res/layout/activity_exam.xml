@@ -6,7 +6,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-        <include layout="@layout/view_title"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/tv_jiaojuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="交卷"
+                android:padding="10dp"
+                android:textSize="16dp"
+
+                android:textColor="@color/black"
+                />
+        </LinearLayout>
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_pager"
             android:layout_width="match_parent"
@@ -25,6 +40,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"
                 android:text="@string/home_text_up"
                 />
             <TextView
@@ -33,6 +52,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/home_text_time"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/black"
                 />
             <TextView
                 android:id="@+id/tv_down"
@@ -40,6 +63,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/home_text_down"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/black"
                 />
         </LinearLayout>
 

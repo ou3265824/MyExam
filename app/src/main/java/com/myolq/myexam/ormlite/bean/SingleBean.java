@@ -154,4 +154,21 @@ public class SingleBean {
         this.type = type;
     }
 
+    @Override
+    public String toString() {
+        return "SingleBean{" +
+                "singleId=" + singleId +
+                ", titleId=" + titleId +
+                ", titleName='" + titleName + '\'' +
+                ", optionA='" + optionA + '\'' +
+                ", optionB='" + optionB + '\'' +
+                ", optionC='" + optionC + '\'' +
+                ", optionD='" + optionD + '\'' +
+                ", result='" + result + '\'' +
+                ", type='" + type + '\'' +
+                ", fraction='" + fraction + '\'' +
+                ", objectId='" + objectId + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                '}';
+    }
 }

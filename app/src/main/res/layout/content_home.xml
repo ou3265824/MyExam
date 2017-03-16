@@ -24,17 +24,52 @@
             android:button="@null"
             android:textSize="16sp"
             android:padding="10dp"
+            android:drawableTop="@mipmap/timu"
+            android:gravity="center"
             android:text="@string/home_text_title" />
 
         <RadioButton
-            android:id="@+id/rb_exam"
+            android:id="@+id/rb_single"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
             android:textSize="16sp"
             android:padding="10dp"
-            android:text="@string/home_text_exam" />
+            android:drawableTop="@mipmap/danxuan"
+            android:gravity="center"
+            android:text="@string/home_text_single" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:showDividers = "middle|end|beginning"
+        android:divider="@color/colorAccent"
+        >
 
+        <RadioButton
+            android:id="@+id/rb_many"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:drawableTop="@mipmap/duoxuan"
+            android:gravity="center"
+            android:text="@string/home_text_many" />
+
+        <RadioButton
+            android:id="@+id/rb_judge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:drawableTop="@mipmap/panduan"
+            android:gravity="center"
+            android:text="@string/home_text_down" />
+    </LinearLayout>
 </LinearLayout>

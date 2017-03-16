@@ -15,8 +15,8 @@ import com.myolq.frame.loader.OkgoLoader;
 import com.myolq.myexam.base.InitActivity;
 import com.myolq.myexam.bean.BaseBean;
 import com.myolq.myexam.exam.ExamActivity;
-import com.myolq.myexam.ormlite.dao.SingleDao;
 import com.myolq.myexam.ormlite.bean.SingleBean;
+import com.myolq.myexam.ormlite.dao.SingleDao;
 
 import java.util.List;
 
@@ -25,13 +25,20 @@ import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class HomeActivity extends InitActivity
-         {
+public class HomeActivity extends InitActivity {
 
     @BindView(R.id.rb_title)
     RadioButton rbTitle;
-    @BindView(R.id.rb_exam)
-    RadioButton rbExam;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.rb_single)
+    RadioButton rbSingle;
+    @BindView(R.id.rb_many)
+    RadioButton rbMany;
+    @BindView(R.id.rb_judge)
+    RadioButton rbJudge;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
 
     @Override
     public int getLayout() {
@@ -42,32 +49,56 @@ public class HomeActivity extends InitActivity
     public void onCreate() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        OkgoLoader.getInstance().sendByGet(BaseUrl.SINGLE, new GsonCallBack<BaseBean<SingleBean>>(new TypeToken<BaseBean<SingleBean>>(){}.getType()) {
-            @Override
-            public void onSuccess(BaseBean<SingleBean> baseBean, Call call, Response response) {
-//                L.log(baseBean.getResults().get(0).getTitleName());
-//                L.log(baseBean.getResults().get(0).getTitleName());
-//                L.log(baseBean.getResults().get(0).getTitleName());
-                List<SingleBean> list=baseBean.getResults();
-                SingleDao singledao=new SingleDao(getApplicationContext());
-                singledao.add(list);
-            }
+        SingleDao singleDao=new SingleDao(this);
+        if (singleDao.selectMax()!=null){
+            String where="{\"updateAt\":\"$gt\":"+singleDao.selectMax()+"}";
+            OkgoLoader.getInstance().sendByGet(BaseUrl.SINGLE+"?where="+where, new GsonCallBack<BaseBean<SingleBean>>(new TypeToken<BaseBean<SingleBean>>() {
+            }.getType()) {
+                @Override
+                public void onSuccess(BaseBean<SingleBean> baseBean, Call call, Response response) {
+                    List<SingleBean> list = baseBean.getResults();
+                    SingleDao singledao = new SingleDao(getApplicationContext());
+                    singledao.add(list);
+                }
 
-            @Override
-            public void onError(Call call, Response response, Exception e) {
+                @Override
+                public void onError(Call call, Response response, Exception e) {
 
-            }
-        });
+                }
+            });
+        }else{
+            OkgoLoader.getInstance().sendByGet(BaseUrl.SINGLE, new GsonCallBack<BaseBean<SingleBean>>(new TypeToken<BaseBean<SingleBean>>() {
+            }.getType()) {
+                @Override
+                public void onSuccess(BaseBean<SingleBean> baseBean, Call call, Response response) {
+                    List<SingleBean> list = baseBean.getResults();
+                    SingleDao singledao = new SingleDao(getApplicationContext());
+                    singledao.add(list);
+                }
+
+                @Override
+                public void onError(Call call, Response response, Exception e) {
+
+                }
+            });
+        }
+
     }
 
-    @OnClick({R.id.rb_title, R.id.rb_exam})
+    @OnClick({R.id.rb_title, R.id.rb_single, R.id.rb_many, R.id.rb_judge})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rb_title:
-                startActivity(new Intent(this,ExamActivity.class));
+                startActivity(new Intent(this, ExamActivity.class));
                 break;
-            case R.id.rb_exam:
-                startActivity(new Intent(this,ExamActivity.class));
+            case R.id.rb_single:
+                startActivity(new Intent(this, ExamActivity.class));
+                break;
+            case R.id.rb_many:
+                startActivity(new Intent(this, ExamActivity.class));
+                break;
+            case R.id.rb_judge:
+                startActivity(new Intent(this, ExamActivity.class));
                 break;
         }
     }
@@ -164,7 +195,6 @@ public class HomeActivity extends InitActivity
 //        drawer.closeDrawer(GravityCompat.START);
 //        return true;
 //    }
-
 
 
 }
