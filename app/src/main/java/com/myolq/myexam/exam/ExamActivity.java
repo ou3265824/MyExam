@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.myolq.frame.Utils.AppUtils;
 import com.myolq.frame.Utils.L;
+import com.myolq.frame.Utils.TimeUtils;
 import com.myolq.frame.Utils.ToastUtil;
 import com.myolq.myexam.R;
 import com.myolq.myexam.base.InitActivity;
@@ -36,6 +37,7 @@ import butterknife.OnClick;
 
 import static android.R.attr.data;
 import static android.R.attr.fragment;
+import static android.R.attr.type;
 import static android.R.id.list;
 import static android.media.CamcorderProfile.get;
 import static com.tencent.bugly.crashreport.crash.c.g;
@@ -71,6 +73,7 @@ public class ExamActivity extends InitActivity {
     private List<String> daans;
     private Runnable runtime;
     private Handler handlertime;
+    private String type;
 
 
     @Override
@@ -81,6 +84,7 @@ public class ExamActivity extends InitActivity {
 
     @Override
     public void onCreate() {
+        type = getIntent().getStringExtra("type");
         mapList = new ArrayList<>();
         daans = new ArrayList<>();
         if (singleFragment == null) {
@@ -171,14 +175,15 @@ public class ExamActivity extends InitActivity {
         };
         handler.post(runnable);
     }
-
+    int time=60*60;
     public void setTime() {
         handlertime = new Handler();
         runtime = new Runnable() {
             @Override
             public void run() {
-                int time=60*60;
-                tvTime.setText(time--+"");
+//                int time=60*60;
+                time--;
+                tvTime.setText(TimeUtils.secondFormatHms(time)+"");
                 handler.postDelayed(runtime,1000);
             }
         };
@@ -211,7 +216,14 @@ public class ExamActivity extends InitActivity {
                 rbB.setText(single.getOptionB());
                 rbC.setText(single.getOptionC());
                 rbD.setText(single.getOptionD());
-                tvResult.setText("答案：" + single.getResult());
+                if (type.equals("1")){
+                    rbA.setButtonDrawable(null);
+                    rbB.setButtonDrawable(null);
+                    rbC.setButtonDrawable(null);
+                    rbD.setButtonDrawable(null);
+                    tvResult.setText("答案：" + single.getResult());
+                }
+
 
         }
 

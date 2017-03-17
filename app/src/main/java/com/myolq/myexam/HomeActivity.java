@@ -10,12 +10,17 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.google.gson.reflect.TypeToken;
+import com.myolq.frame.Utils.L;
 import com.myolq.frame.callback.GsonCallBack;
 import com.myolq.frame.loader.OkgoLoader;
 import com.myolq.myexam.base.InitActivity;
 import com.myolq.myexam.bean.BaseBean;
 import com.myolq.myexam.exam.ExamActivity;
+import com.myolq.myexam.ormlite.bean.JudgeBean;
+import com.myolq.myexam.ormlite.bean.ManyBean;
 import com.myolq.myexam.ormlite.bean.SingleBean;
+import com.myolq.myexam.ormlite.dao.JudgeDao;
+import com.myolq.myexam.ormlite.dao.ManyDao;
 import com.myolq.myexam.ormlite.dao.SingleDao;
 
 import java.util.List;
@@ -24,6 +29,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Response;
+
+import static android.R.id.list;
 
 public class HomeActivity extends InitActivity {
 
@@ -39,6 +46,9 @@ public class HomeActivity extends InitActivity {
     RadioButton rbJudge;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    private SingleDao singleDao;
+    private ManyDao manyDao;
+    private JudgeDao judgeDao;
 
     @Override
     public int getLayout() {
@@ -49,9 +59,38 @@ public class HomeActivity extends InitActivity {
     public void onCreate() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SingleDao singleDao=new SingleDao(this);
+        singleDao = new SingleDao(this);
+        manyDao = new ManyDao(this);
+        judgeDao = new JudgeDao(this);
+        getSingle();
+        getMany();
+        getJudge();
+    }
+
+    @OnClick({R.id.rb_title, R.id.rb_single, R.id.rb_many, R.id.rb_judge})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rb_title:
+                Intent intent=new Intent(this, ExamActivity.class);
+                intent.putExtra("type","1");
+                startActivity(intent);
+                break;
+            case R.id.rb_single:
+                startActivity(new Intent(this, ExamActivity.class));
+                break;
+            case R.id.rb_many:
+                startActivity(new Intent(this, ExamActivity.class));
+                break;
+            case R.id.rb_judge:
+                startActivity(new Intent(this, ExamActivity.class));
+                break;
+        }
+    }
+
+    private void getSingle(){
         if (singleDao.selectMax()!=null){
-            String where="{\"updateAt\":\"$gt\":"+singleDao.selectMax()+"}";
+            String where="{\"updatedAt\":{\"$gt\":\""+singleDao.selectMax()+"\"}}";
+//            String where="%7B\"updatedAt\":%7B\"$gt\":\""+singleDao.selectMax()+"\"%7D%7D";
             OkgoLoader.getInstance().sendByGet(BaseUrl.SINGLE+"?where="+where, new GsonCallBack<BaseBean<SingleBean>>(new TypeToken<BaseBean<SingleBean>>() {
             }.getType()) {
                 @Override
@@ -82,26 +121,82 @@ public class HomeActivity extends InitActivity {
                 }
             });
         }
-
     }
+    //{"updateAt":{"$gt":"+singleDao.selectMax()+"}}
+    private void getMany(){
+        if (singleDao.selectMax()!=null){
+//            String where="%7B\"titleId\":%7B\"$gt\":"+3+"%7D%7D";
+            String where="{\"updatedAt\":{\"$gt\":\""+singleDao.selectMax()+"\"}}";
+//            String where="%7B\"updatedAt\":%7B\"$gt\":\""+singleDao.selectMax()+"\"%7D%7D";
+            OkgoLoader.getInstance().sendByGet(BaseUrl.MANY+"?where="+where, new GsonCallBack<BaseBean<ManyBean>>(new TypeToken<BaseBean<ManyBean>>() {
+            }.getType()) {
+                @Override
+                public void onSuccess(BaseBean<ManyBean> baseBean, Call call, Response response) {
+                    List<ManyBean> list = baseBean.getResults();
+                    ManyDao manyDao = new ManyDao(getApplicationContext());
+                    manyDao.add(list);
+//                    L.log(baseBean.g());
+                }
 
-    @OnClick({R.id.rb_title, R.id.rb_single, R.id.rb_many, R.id.rb_judge})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.rb_title:
-                startActivity(new Intent(this, ExamActivity.class));
-                break;
-            case R.id.rb_single:
-                startActivity(new Intent(this, ExamActivity.class));
-                break;
-            case R.id.rb_many:
-                startActivity(new Intent(this, ExamActivity.class));
-                break;
-            case R.id.rb_judge:
-                startActivity(new Intent(this, ExamActivity.class));
-                break;
+                @Override
+                public void onError(Call call, Response response, Exception e) {
+
+                }
+            });
+        }else{
+            OkgoLoader.getInstance().sendByGet(BaseUrl.MANY, new GsonCallBack<BaseBean<ManyBean>>(new TypeToken<BaseBean<ManyBean>>() {
+            }.getType()) {
+                @Override
+                public void onSuccess(BaseBean<ManyBean> baseBean, Call call, Response response) {
+                    List<ManyBean> list = baseBean.getResults();
+                    ManyDao manyDao = new ManyDao(getApplicationContext());
+                    manyDao.add(list);
+                }
+
+                @Override
+                public void onError(Call call, Response response, Exception e) {
+
+                }
+            });
         }
     }
+    private void getJudge(){
+        if (singleDao.selectMax()!=null){
+            String where="{\"updatedAt\":{\"$gt\":\""+singleDao.selectMax()+"\"}}";
+//            String where="%7B\"updatedAt\":%7B\"$gt\":\""+singleDao.selectMax()+"\"%7D%7D";
+            OkgoLoader.getInstance().sendByGet(BaseUrl.JUDGE+"?where="+where, new GsonCallBack<BaseBean<JudgeBean>>(new TypeToken<BaseBean<JudgeBean>>() {
+            }.getType()) {
+                @Override
+                public void onSuccess(BaseBean<JudgeBean> baseBean, Call call, Response response) {
+                    List<JudgeBean> list = baseBean.getResults();
+                    JudgeDao judgeDao = new JudgeDao(getApplicationContext());
+                    judgeDao.add(list);
+                }
+
+                @Override
+                public void onError(Call call, Response response, Exception e) {
+
+                }
+            });
+        }else{
+            OkgoLoader.getInstance().sendByGet(BaseUrl.JUDGE, new GsonCallBack<BaseBean<JudgeBean>>(new TypeToken<BaseBean<JudgeBean>>() {
+            }.getType()) {
+                @Override
+                public void onSuccess(BaseBean<JudgeBean> baseBean, Call call, Response response) {
+                    List<JudgeBean> list = baseBean.getResults();
+                    JudgeDao judgeDao = new JudgeDao(getApplicationContext());
+                    judgeDao.add(list);
+                }
+
+                @Override
+                public void onError(Call call, Response response, Exception e) {
+
+                }
+            });
+        }
+    }
+
+
 
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {

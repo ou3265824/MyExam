@@ -7,6 +7,8 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.myolq.myexam.ormlite.bean.JudgeBean;
+import com.myolq.myexam.ormlite.bean.ManyBean;
 import com.myolq.myexam.ormlite.bean.SingleBean;
 
 import java.sql.SQLException;
@@ -36,6 +38,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             //存放自选数据的表
             TableUtils.createTableIfNotExists(connectionSource, SingleBean.class);
+            TableUtils.createTableIfNotExists(connectionSource, ManyBean.class);
+            TableUtils.createTableIfNotExists(connectionSource, JudgeBean.class);
 
 
         } catch (SQLException e) {

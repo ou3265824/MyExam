@@ -6,13 +6,13 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * Created by Administrator on 2017/3/15.
  */
-@DatabaseTable(tableName = "single")
-public class SingleBean {
+@DatabaseTable(tableName = "many")
+public class ManyBean {
 
 
 
     //主键：交易所编号+合约编号
-    @DatabaseField(columnName = "singleId",id = true)
+    @DatabaseField(columnName = "manyId",id = true)
     private String objectId;
     @DatabaseField(columnName = "titleId")
     private Long titleId;
@@ -38,8 +38,9 @@ public class SingleBean {
     private String updatedAt;
 
 
-    public SingleBean() {
+    public ManyBean() {
     }
+
 
     public String getFraction() {
 
@@ -130,7 +131,5 @@ public class SingleBean {
     public void setType(String type) {
         this.type = type;
     }
-
-
 
 }
