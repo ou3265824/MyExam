@@ -1,21 +1,21 @@
 package com.myolq.myexam;
 
 import android.content.Intent;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Handler;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.myolq.frame.Utils.AppUtils;
+import com.myolq.frame.Utils.ToastUtil;
 import com.myolq.frame.callback.GsonCallBack;
 import com.myolq.frame.loader.OkgoLoader;
 import com.myolq.myexam.base.InitActivity;
 import com.myolq.myexam.bean.BaseBean;
 import com.myolq.myexam.exam.ExamActivity;
-import com.myolq.myexam.exam.ManyActivity;
 import com.myolq.myexam.ormlite.bean.JudgeBean;
 import com.myolq.myexam.ormlite.bean.ManyBean;
 import com.myolq.myexam.ormlite.bean.SingleBean;
@@ -32,8 +32,6 @@ import okhttp3.Response;
 
 public class HomeActivity extends InitActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.rb_single)
     RadioButton rbSingle;
     @BindView(R.id.rb_single_exam)
@@ -46,8 +44,10 @@ public class HomeActivity extends InitActivity {
     RadioButton rbJudge;
     @BindView(R.id.rb_judge_exam)
     RadioButton rbJudgeExam;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
     private SingleDao singleDao;
     private ManyDao manyDao;
     private JudgeDao judgeDao;
@@ -59,8 +59,8 @@ public class HomeActivity extends InitActivity {
 
     @Override
     public void onCreate() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        tvTitle.setText("首页");
+        ivBack.setVisibility(View.GONE);
         singleDao = new SingleDao(this);
         manyDao = new ManyDao(this);
         judgeDao = new JudgeDao(this);
@@ -68,7 +68,6 @@ public class HomeActivity extends InitActivity {
         getMany();
         getJudge();
     }
-
 
 
     private void getSingle() {
@@ -183,7 +182,6 @@ public class HomeActivity extends InitActivity {
     }
 
 
-
     @OnClick({R.id.rb_single, R.id.rb_single_exam, R.id.rb_many, R.id.rb_many_exam, R.id.rb_judge, R.id.rb_judge_exam})
     public void onClick(View view) {
         Intent intent = null;
@@ -221,5 +219,17 @@ public class HomeActivity extends InitActivity {
         }
     }
 
+    long back=0;
+    @Override
+    public void onBackPressed() {
+        long current=System.currentTimeMillis();
+
+        if ( current-back>2000) {
+            back=System.currentTimeMillis();
+            ToastUtil.show(AppUtils.appContext, "再按一次退出程序");
+        } else {
+            System.exit(0);
+        }
+    }
 
 }
