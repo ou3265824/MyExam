@@ -16,6 +16,7 @@ import com.myolq.frame.loader.OkgoLoader;
 import com.myolq.myexam.base.InitActivity;
 import com.myolq.myexam.bean.BaseBean;
 import com.myolq.myexam.exam.ExamActivity;
+import com.myolq.myexam.exam.ManyActivity;
 import com.myolq.myexam.ormlite.bean.JudgeBean;
 import com.myolq.myexam.ormlite.bean.ManyBean;
 import com.myolq.myexam.ormlite.bean.SingleBean;
@@ -187,33 +188,39 @@ public class HomeActivity extends InitActivity {
         Intent intent = null;
         switch (view.getId()) {
             case R.id.rb_single:
-                intent = new Intent(this, ExamActivity.class);
-                intent.putExtra("type", "1");
+                intent = new Intent(this, ManyActivity.class);
+                intent.putExtra("type", 1);
+                intent.putExtra("isView",true);
                 startActivity(intent);
                 break;
             case R.id.rb_single_exam:
-                intent = new Intent(this, ExamActivity.class);
-                intent.putExtra("type", "1");
+                intent = new Intent(this, ManyActivity.class);
+                intent.putExtra("type", 1);
+                intent.putExtra("isView",false);
                 startActivity(intent);
                 break;
             case R.id.rb_many:
-                intent = new Intent(this, ExamActivity.class);
-                intent.putExtra("type", "1");
+                intent = new Intent(this, ManyActivity.class);
+                intent.putExtra("type", 2);
+                intent.putExtra("isView",true);
                 startActivity(intent);
                 break;
             case R.id.rb_many_exam:
-                intent = new Intent(this, ExamActivity.class);
-                intent.putExtra("type", "1");
+                intent = new Intent(this, ManyActivity.class);
+                intent.putExtra("type", 2);
+                intent.putExtra("isView",false);
                 startActivity(intent);
                 break;
             case R.id.rb_judge:
-                intent = new Intent(this, ExamActivity.class);
-                intent.putExtra("type", "1");
+                intent = new Intent(this, ManyActivity.class);
+                intent.putExtra("type", 3);
+                intent.putExtra("isView",true);
                 startActivity(intent);
                 break;
             case R.id.rb_judge_exam:
-                intent = new Intent(this, ExamActivity.class);
-                intent.putExtra("type", "1");
+                intent = new Intent(this, ManyActivity.class);
+                intent.putExtra("type", 3);
+                intent.putExtra("isView",false);
                 startActivity(intent);
                 break;
         }

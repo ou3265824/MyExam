@@ -1,26 +1,24 @@
 package com.myolq.myexam.exam;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.myolq.frame.Utils.AppUtils;
-import com.myolq.frame.Utils.CharacterUtils;
-import com.myolq.frame.Utils.ToastUtil;
+import com.myolq.frame.Utils.L;
 import com.myolq.myexam.R;
 import com.myolq.myexam.base.InitFragment;
 import com.myolq.myexam.ormlite.bean.ManyBean;
-import com.myolq.myexam.ormlite.bean.SingleBean;
 import com.myolq.myexam.ormlite.dao.ManyDao;
+import com.myolq.myexam.utils.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,9 +26,10 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
-import static android.R.attr.type;
-import static android.R.id.list;
+import static android.R.attr.data;
+import static android.media.CamcorderProfile.get;
 
 /**
  * Created by Administrator on 2017/3/14.
@@ -55,6 +54,8 @@ public class ManyFragment extends InitFragment {
     private ManyDao manyDao;
     private ManyActivity activity;
     private List<String> datas;
+    private List<Map<String, String>> daanList;
+
 
     @Override
     public int getLayout() {
@@ -65,11 +66,12 @@ public class ManyFragment extends InitFragment {
     public void onCreateView() {
         activity = (ManyActivity) getActivity();
         datas = new ArrayList<>();
-        if (manyDao==null)
+        daanList = new ArrayList<>();
+        if (manyDao == null)
             manyDao = new ManyDao(AppUtils.appContext);
-        if (manyList==null)
+        if (manyList == null)
             manyList = new ArrayList<>();
-        if (views==null)
+        if (views == null)
             views = new ArrayList<>();
         if (examAdapter == null)
             examAdapter = new ExamAdapter(views);
@@ -104,31 +106,57 @@ public class ManyFragment extends InitFragment {
                     case 0:
                         manyList = ((List<ManyBean>) msg.obj);
                         for (int i = 0; i < manyList.size(); i++) {
-                            View view=getViewSingle(manyList.get(i));
+                            View view = getViewSingle(manyList.get(i));
                             views.add(view);
-                            Map<Integer,View> map=new HashMap<>();
-                            map.put(i,view);
+//                            Map<Integer,View> map=new HashMap<>();
+//                            map.put(i,view);
 //                            mapList.add(map);
-                            datas.add("");
+                            daanList.add(new HashMap<String, String>());
                         }
 
                         vpPager.setAdapter(examAdapter);
-//                        for (int j = 0; j < views.size(); j++) {
-//                            RadioGroup group= (RadioGroup)views.get(j).findViewById(R.id.rg_xuanze);
-//                            final int finalJ = j;
-//                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//                                @Override
-//                                public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                                    //获取变更后的选中项的ID
-//                                    int radioButtonId = group.getCheckedRadioButtonId();
-//                                    //根据ID获取RadioButton的实例
-//                                    RadioButton rb = (RadioButton) views.get(finalJ).findViewById(radioButtonId);
-//                                    //更新文本内容，以符合选中项
-//                                    ToastUtil.show(AppUtils.appContext,"您的性别是：" + rb.getText());
-//                                    datas.set(finalJ,rb.getText()+"");
-//                                }
-//                            });
-//                        }
+
+                        for (int j = 0; j < views.size(); j++) {
+                            CheckBox cbA = (CheckBox) views.get(j).findViewById(R.id.cb_a);
+                            CheckBox cbB = (CheckBox) views.get(j).findViewById(R.id.cb_b);
+                            CheckBox cbC = (CheckBox) views.get(j).findViewById(R.id.cb_c);
+                            CheckBox cbD = (CheckBox) views.get(j).findViewById(R.id.cb_d);
+                            final CheckBox[] cbs = new CheckBox[]{cbA, cbB, cbC, cbD};
+                            for (int i = 0; i < cbs.length; i++) {
+                                final int finalJ = j;
+                                cbs[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                        Map<String, String> map = new HashMap<String, String>();
+//                                        if (b) {
+                                            if (cbs[0].isChecked()) {
+                                                map.put("opA", "A");
+                                            } else {
+                                                map.remove("opA");
+                                            }
+                                            if (cbs[1].isChecked()) {
+                                                map.put("opB", "B");
+                                            } else {
+                                                map.remove("opB");
+                                            }
+                                            if (cbs[2].isChecked()) {
+                                                map.put("opC", "C");
+                                            } else {
+                                                map.remove("opC");
+                                            }
+                                            if (cbs[3].isChecked()) {
+                                                map.put("opD", "D");
+                                            } else {
+                                                map.remove("opD");
+                                            }
+                                            daanList.set(finalJ, map);
+//                                        }else{
+//
+//                                        }
+                                    }
+                                });
+                            }
+                        }
 
                         break;
                 }
@@ -154,29 +182,30 @@ public class ManyFragment extends InitFragment {
         return view;
     }
 
-    public void setinit(View view,ManyBean many) {
+    public void setinit(View view, ManyBean many) {
         TextView tvTitleName = (TextView) view.findViewById(R.id.tv_title_name);
         final TextView tvResult = (TextView) view.findViewById(R.id.tv_result);
 //            RadioGroup group = (RadioGroup) view.findViewById(R.id.rg_xuanze);
-        AppCompatCheckBox cbA = (AppCompatCheckBox) view.findViewById(R.id.cb_a);
-        AppCompatCheckBox cbB = (AppCompatCheckBox) view.findViewById(R.id.cb_b);
-        AppCompatCheckBox cbC = (AppCompatCheckBox) view.findViewById(R.id.cb_c);
-        AppCompatCheckBox cbD = (AppCompatCheckBox) view.findViewById(R.id.cb_d);
+        CheckBox cbA = (CheckBox) view.findViewById(R.id.cb_a);
+        CheckBox cbB = (CheckBox) view.findViewById(R.id.cb_b);
+        CheckBox cbC = (CheckBox) view.findViewById(R.id.cb_c);
+        CheckBox cbD = (CheckBox) view.findViewById(R.id.cb_d);
         if (many != null) {
             tvTitleName.setText(many.getTitleName());
             cbA.setText(many.getOptionA());
             cbB.setText(many.getOptionB());
             cbC.setText(many.getOptionC());
             cbD.setText(many.getOptionD());
-//            if (CharacterUtils.isEmpty(activity.getType())&&activity.getType().equals("1")){
-//                Bitmap bitmap=null;
-//                cbA.setButtonDrawable(new BitmapDrawable(bitmap));
-//                cbB.setButtonDrawable(new BitmapDrawable(bitmap));
-//                cbC.setButtonDrawable(new BitmapDrawable(bitmap));
-//                cbD.setButtonDrawable(new BitmapDrawable(bitmap));
-//                tvResult.setText("答案：" + many.getResult());
-//
-//            }
+            if (activity.isView()) {
+                Bitmap bitmap = null;
+                cbA.setButtonDrawable(new BitmapDrawable(bitmap));
+                cbB.setButtonDrawable(new BitmapDrawable(bitmap));
+                cbC.setButtonDrawable(new BitmapDrawable(bitmap));
+                cbD.setButtonDrawable(new BitmapDrawable(bitmap));
+                tvResult.setText("答案：" + many.getResult());
+
+            }
+
             tvResult.setText("答案：" + many.getResult());
 
         }
@@ -184,5 +213,57 @@ public class ManyFragment extends InitFragment {
     }
 
 
+    @OnClick({R.id.tv_jiaojuan, R.id.tv_up, R.id.tv_down})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_jiaojuan:
+                double grade=0;
+                for (int j = 0; j < views.size(); j++) {
 
+                    L.log(daanList.get(j)+"-----"+manyList.get(j).getResult());
+                    Map<String,String> map=daanList.get(j);
+                    String[] daans=new String[4];
+                    if (map.get("opA")!=null){
+                        daans[0]="A";
+                    }
+                    if (map.get("opB")!=null){
+                        daans[1]="B";
+                    }
+                    if (map.get("opC")!=null){
+                        daans[2]="C";
+                    }
+                    if (map.get("opD")!=null){
+                        daans[3]="D";
+                    }
+                    String[] result=manyList.get(j).getResult().split(",");
+                    for (int i = 0; i < result.length; i++) {
+                        for (int k = 0; k < daans.length; k++){
+                            if (result[i].equals(daans[k])){
+                                L.log("对:"+manyList.get(j).getFraction());
+                                grade+= Double.parseDouble(manyList.get(j).getFraction());
+                            }
+                        }
+                    }
+                }
+
+                DialogUtils.createAlertDialog(getActivity(), "分数","你考了" + grade + "分", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                        getActivity().finish();
+                    }
+                });
+                break;
+            case R.id.tv_up:
+                if (current>0){
+                    current--;
+                    vpPager.setCurrentItem(current);
+                }
+                break;
+            case R.id.tv_down:
+                current++;
+                vpPager.setCurrentItem(current);
+                break;
+        }
+    }
 }

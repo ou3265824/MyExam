@@ -1,5 +1,7 @@
 package com.myolq.myexam.exam;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -10,10 +12,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.myolq.frame.Utils.AppUtils;
+import com.myolq.frame.Utils.CharacterUtils;
 import com.myolq.myexam.R;
 import com.myolq.myexam.base.InitFragment;
 import com.myolq.myexam.ormlite.bean.JudgeBean;
 import com.myolq.myexam.ormlite.bean.ManyBean;
+import com.myolq.myexam.ormlite.dao.JudgeDao;
 import com.myolq.myexam.ormlite.dao.ManyDao;
 
 import java.util.ArrayList;
@@ -43,7 +47,7 @@ public class JudgeFragment extends InitFragment {
     private int current;
     private Handler handler;
     private List<JudgeBean> manyList;
-    private ManyDao manyDao;
+    private JudgeDao judgeDao;
     private ManyActivity activity;
     private List<String> datas;
 
@@ -57,8 +61,8 @@ public class JudgeFragment extends InitFragment {
     public void onCreateView() {
         activity = (ManyActivity) getActivity();
         datas = new ArrayList<>();
-        if (manyDao == null)
-            manyDao = new ManyDao(AppUtils.appContext);
+        if (judgeDao == null)
+            judgeDao = new JudgeDao(AppUtils.appContext);
         if (manyList == null)
             manyList = new ArrayList<>();
         if (views == null)
@@ -129,7 +133,7 @@ public class JudgeFragment extends InitFragment {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                List<ManyBean> singleList = manyDao.selectSingleList();
+                List<JudgeBean> singleList = judgeDao.selectSingleList();
                 Message message = new Message();
                 message.what = 0;
                 message.obj = singleList;
@@ -157,16 +161,16 @@ public class JudgeFragment extends InitFragment {
             tvTitleName.setText(judge.getTitleName());
             rbA.setText(judge.getOptionA());
             rbB.setText(judge.getOptionB());
-//            if (CharacterUtils.isEmpty(activity.getType())&&activity.getType().equals("1")){
-//                Bitmap bitmap=null;
-//                cbA.setButtonDrawable(new BitmapDrawable(bitmap));
-//                cbB.setButtonDrawable(new BitmapDrawable(bitmap));
+            if (activity.isView()){
+                Bitmap bitmap=null;
+                rbA.setButtonDrawable(new BitmapDrawable(bitmap));
+                rbB.setButtonDrawable(new BitmapDrawable(bitmap));
 //                cbC.setButtonDrawable(new BitmapDrawable(bitmap));
 //                cbD.setButtonDrawable(new BitmapDrawable(bitmap));
-//                tvResult.setText("答案：" + many.getResult());
-//
-//            }
-            tvResult.setText("答案：" + judge.getResult());
+                tvResult.setText("答案：" + judge.getResult());
+
+            }
+//            tvResult.setText("答案：" + judge.getResult());
 
         }
 
