@@ -94,6 +94,9 @@ public class TimeUtils {
         int h = 0;
         int d = 0;
         int s = 0;
+        String hs="";
+        String ds="";
+        String ss="";
         String time="";
         int temp = second % 3600;
         if (second > 3600) {
@@ -115,15 +118,22 @@ public class TimeUtils {
             }
         }
         if (h<10){
-            time+="0"+h;
+            hs="0"+h;
+        }else{
+            hs= String.valueOf(h);
         }
         if (d<10){
-            time+=":0"+d;
+            ds=":0"+d;
+        }else{
+            ds= String.valueOf(d);
+
         }
         if (s<10){
-            time+=":0"+s;
+            ss=":0"+s;
+        }else{
+            ss= String.valueOf(s);
         }
-        return time;
+        return hs+":"+ds+":"+ss;
     }
 
 

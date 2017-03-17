@@ -1,7 +1,10 @@
 package com.myolq.myexam.exam;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -17,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.myolq.frame.Utils.AppUtils;
+import com.myolq.frame.Utils.CharacterUtils;
 import com.myolq.frame.Utils.L;
 import com.myolq.frame.Utils.TimeUtils;
 import com.myolq.frame.Utils.ToastUtil;
@@ -35,6 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.R.attr.bitmap;
 import static android.R.attr.data;
 import static android.R.attr.fragment;
 import static android.R.attr.type;
@@ -74,6 +79,7 @@ public class ExamActivity extends InitActivity {
     private Runnable runtime;
     private Handler handlertime;
     private String type;
+    private int time=60*60;
 
 
     @Override
@@ -85,6 +91,7 @@ public class ExamActivity extends InitActivity {
     @Override
     public void onCreate() {
         type = getIntent().getStringExtra("type");
+
         mapList = new ArrayList<>();
         daans = new ArrayList<>();
         if (singleFragment == null) {
@@ -97,11 +104,14 @@ public class ExamActivity extends InitActivity {
         if (singleList == null)
             singleList = new ArrayList<>();
         if (examAdapter == null)
-            examAdapter = new ExamAdapter(getSupportFragmentManager(), fragments);
+            examAdapter = new ExamAdapter(views);
 //        vpPager.setAdapter(examAdapter);
         singleDao = new SingleDao(this);
         setTime();
         setHandler();
+        if (!type.equals("1")){
+            handlertime.post(runtime);
+        }
         current = vpPager.getCurrentItem();
         vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -139,8 +149,7 @@ public class ExamActivity extends InitActivity {
                             daans.add("");
                         }
 
-                        MyAdapter myAdapter = new MyAdapter();
-                        vpPager.setAdapter(myAdapter);
+                        vpPager.setAdapter(examAdapter);
                         for (int j = 0; j < mapList.size(); j++) {
                            RadioGroup group= (RadioGroup) mapList.get(j).get(j).findViewById(R.id.rg_xuanze);
                             final int finalJ = j;
@@ -175,19 +184,25 @@ public class ExamActivity extends InitActivity {
         };
         handler.post(runnable);
     }
-    int time=60*60;
+
     public void setTime() {
         handlertime = new Handler();
         runtime = new Runnable() {
             @Override
             public void run() {
 //                int time=60*60;
-                time--;
-                tvTime.setText(TimeUtils.secondFormatHms(time)+"");
-                handler.postDelayed(runtime,1000);
+                if (handler!=null&&runtime!=null){
+                    time--;
+                    tvTime.setText(TimeUtils.secondFormatHms(time)+"");
+                    handler.postDelayed(runtime,1000);
+                }
+                if (time==0){
+                    getJiaojuan();
+                    handler.removeCallbacks(runtime);
+                }
             }
         };
-        handlertime.post(runtime);
+
     }
 
 
@@ -216,12 +231,14 @@ public class ExamActivity extends InitActivity {
                 rbB.setText(single.getOptionB());
                 rbC.setText(single.getOptionC());
                 rbD.setText(single.getOptionD());
-                if (type.equals("1")){
-                    rbA.setButtonDrawable(null);
-                    rbB.setButtonDrawable(null);
-                    rbC.setButtonDrawable(null);
-                    rbD.setButtonDrawable(null);
+                if (CharacterUtils.isEmpty(type)&&type.equals("1")){
+                    Bitmap bitmap=null;
+                    rbA.setButtonDrawable(new BitmapDrawable(bitmap));
+                    rbB.setButtonDrawable(new BitmapDrawable(bitmap));
+                    rbC.setButtonDrawable(new BitmapDrawable(bitmap));
+                    rbD.setButtonDrawable(new BitmapDrawable(bitmap));
                     tvResult.setText("答案：" + single.getResult());
+
                 }
 
 
@@ -244,60 +261,55 @@ public class ExamActivity extends InitActivity {
                 vpPager.setCurrentItem(current);
                 break;
             case R.id.tv_jiaojuan:
-                double grade=0;
-                for (int j = 0; j < views.size(); j++) {
-                    L.log(daans.get(j)+"-----"+singleList.get(j).getResult());
-                    if (daans.get(j).startsWith(singleList.get(j).getResult())) {
-
-                        L.log(grade+"-----"+singleList.get(j).getFraction());
-                        grade+= Double.parseDouble(singleList.get(j).getFraction());
-
-                    }
-                }
-                AlertDialog.Builder builder=new AlertDialog.Builder(this);
-                builder.setTitle("分数");
-                builder.setMessage("你考了"+grade+"分");
-                AlertDialog dialog=builder.create();
-                dialog.setCancelable(false);
-                dialog.show();
-                builder.setNeutralButton("退出", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        finish();
-                    }
-                });
+                getJiaojuan();
                 break;
         }
     }
 
-    class MyAdapter extends PagerAdapter {
+    private void getJiaojuan(){
+        double grade=0;
+        for (int j = 0; j < views.size(); j++) {
+            L.log(daans.get(j)+"-----"+singleList.get(j).getResult());
+            if (daans.get(j).startsWith(singleList.get(j).getResult())) {
 
-        @Override
-        public int getCount() {
-            return views.size();
+                L.log(grade+"-----"+singleList.get(j).getFraction());
+                grade+= Double.parseDouble(singleList.get(j).getFraction());
+
+            }
         }
-
-        @Override
-        public boolean isViewFromObject(View arg0, Object arg1) {
-            return arg0 == arg1;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(views.get(position));
-//			super.destroyItem(container, position, object);
-        }
-
-        //类似BaseAdapter中的getView
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            View view = views.get(position);
-            //细节:必须将view添加到container中
-            container.addView(view);
-            return view;
-        }
-
+//        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+//        builder.setTitle("分数");
+//        builder.setMessage("你考了"+grade+"分");
+//        AlertDialog dialog=builder.create();
+//        dialog.setCancelable(false);
+//        dialog.show();
+//        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//                finish();
+//            }
+//        });
+        createAlertDialog(this, "分数","你考了" + grade + "分", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+                finish();
+            }
+        });
     }
 
+    public static void createAlertDialog(Context context,String title, String msg, DialogInterface.OnClickListener onClickListener) {
+        new AlertDialog.Builder(context).setTitle(title).setMessage(msg).setPositiveButton("确认", onClickListener).setCancelable(false).create().show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handlertime != null && runtime != null){
+            handlertime.removeCallbacks(runtime);
+            handlertime=null;
+            runtime=null;
+        }
+    }
 }

@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:showDividers = "middle|end|beginning"
+    android:divider="@color/gray"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_home">
 
@@ -13,20 +15,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:showDividers = "middle|end|beginning"
-        android:divider="@color/colorAccent"
+        android:divider="@color/gray"
         >
-
-        <RadioButton
-            android:id="@+id/rb_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:textSize="16sp"
-            android:padding="10dp"
-            android:drawableTop="@mipmap/timu"
-            android:gravity="center"
-            android:text="@string/home_text_title" />
 
         <RadioButton
             android:id="@+id/rb_single"
@@ -38,14 +28,26 @@
             android:padding="10dp"
             android:drawableTop="@mipmap/danxuan"
             android:gravity="center"
-            android:text="@string/home_text_single" />
+            android:text="单选题" />
+
+        <RadioButton
+            android:id="@+id/rb_single_exam"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:drawableTop="@mipmap/danxuan"
+            android:gravity="center"
+            android:text="单选考试" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:showDividers = "middle|end|beginning"
-        android:divider="@color/colorAccent"
+        android:divider="@color/gray"
         >
 
         <RadioButton
@@ -58,7 +60,27 @@
             android:padding="10dp"
             android:drawableTop="@mipmap/duoxuan"
             android:gravity="center"
-            android:text="@string/home_text_many" />
+            android:text="多选题" />
+
+        <RadioButton
+            android:id="@+id/rb_many_exam"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:drawableTop="@mipmap/duoxuan"
+            android:gravity="center"
+            android:text="多选考试" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:showDividers = "middle|end|beginning"
+        android:divider="@color/gray"
+        >
 
         <RadioButton
             android:id="@+id/rb_judge"
@@ -70,6 +92,18 @@
             android:padding="10dp"
             android:drawableTop="@mipmap/panduan"
             android:gravity="center"
-            android:text="@string/home_text_down" />
+            android:text="判断题" />
+
+        <RadioButton
+            android:id="@+id/rb_judge_exam"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:drawableTop="@mipmap/panduan"
+            android:gravity="center"
+            android:text="判断考试" />
     </LinearLayout>
 </LinearLayout>

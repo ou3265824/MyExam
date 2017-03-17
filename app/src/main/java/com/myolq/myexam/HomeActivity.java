@@ -10,12 +10,12 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.google.gson.reflect.TypeToken;
-import com.myolq.frame.Utils.L;
 import com.myolq.frame.callback.GsonCallBack;
 import com.myolq.frame.loader.OkgoLoader;
 import com.myolq.myexam.base.InitActivity;
 import com.myolq.myexam.bean.BaseBean;
 import com.myolq.myexam.exam.ExamActivity;
+import com.myolq.myexam.exam.ManyActivity;
 import com.myolq.myexam.ormlite.bean.JudgeBean;
 import com.myolq.myexam.ormlite.bean.ManyBean;
 import com.myolq.myexam.ormlite.bean.SingleBean;
@@ -30,20 +30,22 @@ import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static android.R.id.list;
-
 public class HomeActivity extends InitActivity {
 
-    @BindView(R.id.rb_title)
-    RadioButton rbTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rb_single)
     RadioButton rbSingle;
+    @BindView(R.id.rb_single_exam)
+    RadioButton rbSingleExam;
     @BindView(R.id.rb_many)
     RadioButton rbMany;
+    @BindView(R.id.rb_many_exam)
+    RadioButton rbManyExam;
     @BindView(R.id.rb_judge)
     RadioButton rbJudge;
+    @BindView(R.id.rb_judge_exam)
+    RadioButton rbJudgeExam;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     private SingleDao singleDao;
@@ -67,31 +69,13 @@ public class HomeActivity extends InitActivity {
         getJudge();
     }
 
-    @OnClick({R.id.rb_title, R.id.rb_single, R.id.rb_many, R.id.rb_judge})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.rb_title:
-                Intent intent=new Intent(this, ExamActivity.class);
-                intent.putExtra("type","1");
-                startActivity(intent);
-                break;
-            case R.id.rb_single:
-                startActivity(new Intent(this, ExamActivity.class));
-                break;
-            case R.id.rb_many:
-                startActivity(new Intent(this, ExamActivity.class));
-                break;
-            case R.id.rb_judge:
-                startActivity(new Intent(this, ExamActivity.class));
-                break;
-        }
-    }
 
-    private void getSingle(){
-        if (singleDao.selectMax()!=null){
-            String where="{\"updatedAt\":{\"$gt\":\""+singleDao.selectMax()+"\"}}";
+
+    private void getSingle() {
+        if (singleDao.selectMax() != null) {
+            String where = "{\"updatedAt\":{\"$gt\":\"" + singleDao.selectMax() + "\"}}";
 //            String where="%7B\"updatedAt\":%7B\"$gt\":\""+singleDao.selectMax()+"\"%7D%7D";
-            OkgoLoader.getInstance().sendByGet(BaseUrl.SINGLE+"?where="+where, new GsonCallBack<BaseBean<SingleBean>>(new TypeToken<BaseBean<SingleBean>>() {
+            OkgoLoader.getInstance().sendByGet(BaseUrl.SINGLE + "?where=" + where, new GsonCallBack<BaseBean<SingleBean>>(new TypeToken<BaseBean<SingleBean>>() {
             }.getType()) {
                 @Override
                 public void onSuccess(BaseBean<SingleBean> baseBean, Call call, Response response) {
@@ -105,7 +89,7 @@ public class HomeActivity extends InitActivity {
 
                 }
             });
-        }else{
+        } else {
             OkgoLoader.getInstance().sendByGet(BaseUrl.SINGLE, new GsonCallBack<BaseBean<SingleBean>>(new TypeToken<BaseBean<SingleBean>>() {
             }.getType()) {
                 @Override
@@ -122,13 +106,14 @@ public class HomeActivity extends InitActivity {
             });
         }
     }
+
     //{"updateAt":{"$gt":"+singleDao.selectMax()+"}}
-    private void getMany(){
-        if (singleDao.selectMax()!=null){
+    private void getMany() {
+        if (singleDao.selectMax() != null) {
 //            String where="%7B\"titleId\":%7B\"$gt\":"+3+"%7D%7D";
-            String where="{\"updatedAt\":{\"$gt\":\""+singleDao.selectMax()+"\"}}";
+            String where = "{\"updatedAt\":{\"$gt\":\"" + singleDao.selectMax() + "\"}}";
 //            String where="%7B\"updatedAt\":%7B\"$gt\":\""+singleDao.selectMax()+"\"%7D%7D";
-            OkgoLoader.getInstance().sendByGet(BaseUrl.MANY+"?where="+where, new GsonCallBack<BaseBean<ManyBean>>(new TypeToken<BaseBean<ManyBean>>() {
+            OkgoLoader.getInstance().sendByGet(BaseUrl.MANY + "?where=" + where, new GsonCallBack<BaseBean<ManyBean>>(new TypeToken<BaseBean<ManyBean>>() {
             }.getType()) {
                 @Override
                 public void onSuccess(BaseBean<ManyBean> baseBean, Call call, Response response) {
@@ -143,7 +128,7 @@ public class HomeActivity extends InitActivity {
 
                 }
             });
-        }else{
+        } else {
             OkgoLoader.getInstance().sendByGet(BaseUrl.MANY, new GsonCallBack<BaseBean<ManyBean>>(new TypeToken<BaseBean<ManyBean>>() {
             }.getType()) {
                 @Override
@@ -160,11 +145,12 @@ public class HomeActivity extends InitActivity {
             });
         }
     }
-    private void getJudge(){
-        if (singleDao.selectMax()!=null){
-            String where="{\"updatedAt\":{\"$gt\":\""+singleDao.selectMax()+"\"}}";
+
+    private void getJudge() {
+        if (singleDao.selectMax() != null) {
+            String where = "{\"updatedAt\":{\"$gt\":\"" + singleDao.selectMax() + "\"}}";
 //            String where="%7B\"updatedAt\":%7B\"$gt\":\""+singleDao.selectMax()+"\"%7D%7D";
-            OkgoLoader.getInstance().sendByGet(BaseUrl.JUDGE+"?where="+where, new GsonCallBack<BaseBean<JudgeBean>>(new TypeToken<BaseBean<JudgeBean>>() {
+            OkgoLoader.getInstance().sendByGet(BaseUrl.JUDGE + "?where=" + where, new GsonCallBack<BaseBean<JudgeBean>>(new TypeToken<BaseBean<JudgeBean>>() {
             }.getType()) {
                 @Override
                 public void onSuccess(BaseBean<JudgeBean> baseBean, Call call, Response response) {
@@ -178,7 +164,7 @@ public class HomeActivity extends InitActivity {
 
                 }
             });
-        }else{
+        } else {
             OkgoLoader.getInstance().sendByGet(BaseUrl.JUDGE, new GsonCallBack<BaseBean<JudgeBean>>(new TypeToken<BaseBean<JudgeBean>>() {
             }.getType()) {
                 @Override
@@ -198,98 +184,42 @@ public class HomeActivity extends InitActivity {
 
 
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_home);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        OkgoLoader.getInstance().sendByGet(BaseUrl.SUBJECT, new StringCallBack() {
-//            @Override
-//            public void onSuccess(String s, Call call, Response response) {
-//                L.log(s);
-//            }
-//
-//            @Override
-//            public void onError(Call call, Response response, Exception e) {
-//
-//            }
-//        });
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
-//    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+    @OnClick({R.id.rb_single, R.id.rb_single_exam, R.id.rb_many, R.id.rb_many_exam, R.id.rb_judge, R.id.rb_judge_exam})
+    public void onClick(View view) {
+        Intent intent = null;
+        switch (view.getId()) {
+            case R.id.rb_single:
+                intent = new Intent(this, ExamActivity.class);
+                intent.putExtra("type", "1");
+                startActivity(intent);
+                break;
+            case R.id.rb_single_exam:
+                intent = new Intent(this, ExamActivity.class);
+                intent.putExtra("type", "1");
+                startActivity(intent);
+                break;
+            case R.id.rb_many:
+                intent = new Intent(this, ExamActivity.class);
+                intent.putExtra("type", "1");
+                startActivity(intent);
+                break;
+            case R.id.rb_many_exam:
+                intent = new Intent(this, ExamActivity.class);
+                intent.putExtra("type", "1");
+                startActivity(intent);
+                break;
+            case R.id.rb_judge:
+                intent = new Intent(this, ExamActivity.class);
+                intent.putExtra("type", "1");
+                startActivity(intent);
+                break;
+            case R.id.rb_judge_exam:
+                intent = new Intent(this, ExamActivity.class);
+                intent.putExtra("type", "1");
+                startActivity(intent);
+                break;
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
-//
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
 
 
 }
